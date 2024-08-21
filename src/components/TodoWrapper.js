@@ -12,18 +12,29 @@ import {
 
 export const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const loadTodos = async () => {
-      const fetchedTodos = await fetchTodos();
-      setTodos(fetchedTodos);
+      try {
+        const fetchedTodos = await fetchTodos();
+        setTodos(fetchedTodos);
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      } finally {
+        setIsLoading(false)
+      }
     };
     loadTodos();
   }, []);
 
   const addTodo = async (todo) => {
-    const newTodo = await createTodo({ task: todo, completed: false });
-    setTodos([...todos, newTodo]);
+    try {
+      const newTodo = await createTodo(todo);
+      setTodos([...todos, newTodo]);
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
   };
 
   const deleteTodo = async (id) => {
@@ -59,17 +70,21 @@ export const TodoWrapper = () => {
       <h1>Getting Things Done!</h1>
       <TodoForm addTodo={addTodo} />
       {/* display todos */}
-      {todos.map((todo) =>
-        todo.isEditing ? (
-          <EditTodoForm editTodo={editTask} task={todo} />
-        ) : (
-          <Todo
-            key={todo.id}
-            task={todo}
-            deleteTodo={deleteTodo}
-            editTodo={editTodo}
-            toggleComplete={toggleComplete}
-          />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        todos.map((todo) =>
+          todo.isEditing ? (
+            <EditTodoForm editTodo={editTask} task={todo} />
+          ) : (
+            <Todo
+              key={todo.id}
+              task={todo}
+              deleteTodo={deleteTodo}
+              editTodo={editTodo}
+              toggleComplete={toggleComplete}
+            />
+          )
         )
       )}
     </div>
