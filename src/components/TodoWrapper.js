@@ -30,7 +30,7 @@ export const TodoWrapper = () => {
 
   const addTodo = async (todo) => {
     try {
-      const newTodo = await createTodo({ task: todo, completed: false });
+      const newTodo = await createTodo(todo);
       setTodos([...todos, newTodo]);
     } catch (error) {
       console.error("Error creating todo:", error);
@@ -57,7 +57,7 @@ export const TodoWrapper = () => {
   };
 
   const editTask = async (task, id) => {
-    const updatedTodo = await updateTodo(id, { task });
+    const updatedTodo = await updateTodo(id, { title: task });
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...updatedTodo, isEditing: false } : todo

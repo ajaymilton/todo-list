@@ -40,7 +40,7 @@ export const updateTodo = async (id, updates) => {
       body: JSON.stringify({ title: updates.title }),  // Ensure the correct key is used
     });
     if (!response.ok) {
-      throw new Error("Failed to update todo");
+      throw new Error(`Failed to update todo: ${response.status} ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
