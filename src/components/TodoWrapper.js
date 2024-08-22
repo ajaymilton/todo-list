@@ -30,7 +30,7 @@ export const TodoWrapper = () => {
 
   const addTodo = async (todo) => {
     try {
-      const newTodo = await createTodo({ task: todo, completed: false });
+      const newTodo = await createTodo(todo);
       setTodos([...todos, newTodo]);
     } catch (error) {
       console.error("Error creating todo:", error);
